@@ -80,7 +80,7 @@ i=0
 while i < (len(arr)):
 	if "  - id: " in arr[i]:
 		isGame=True
-		for j in range(4):
+		for j in range(5):
 			if not (arr[i+j+1].startswith("    platform: ") or arr[i+j+1].startswith("    year: ") or arr[i+j+1].startswith("    path: ") or arr[i+j+1].startswith("    title: ")):
 				isGame=False
 		if (not isGame) and (arr[i].startswith("  - id: ")):
