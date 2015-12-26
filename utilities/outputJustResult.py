@@ -1,6 +1,6 @@
-typeToScanFor = "result" #Change to a different category to scan for a different category. The quotes are needed.
+typeToScanFor = input("Insert song type to scan for\n>").strip()
 
-print("1hlixed's category outputter v1.0")
+print("1hlixed's category outputter v1.1")
 import re
 import os
 import sys

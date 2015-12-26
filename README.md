@@ -23,7 +23,7 @@ A library; don't mind it.
 Inserts a user-provided "series:" tag in games without it.
 
 ###outputJustResult.py
-Outputs just songs of type result (and any other, if you edit the file) to analysis.txt
+Outputs just songs of type result (and any other, if you input something different) to analysis.txt.
 
 ###*pathBeforeSongs.py*
 If there are any games that don't have the 'path:' before the 'songs:' tag, it'll fix it.
