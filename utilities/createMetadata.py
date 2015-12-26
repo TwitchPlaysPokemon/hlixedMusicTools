@@ -7,7 +7,7 @@ This program only works in Python 3 because we're switching to py3 for PBR2.0!
 		exit()
 
 
-print("Music Pack maker v1.2.2")
+print("Music Pack maker v1.3")
 print("\nThis program is intended to work with Revo's pack-making process! If you're not Revo, you can still use this, but ask him for the folder setup to use.")
 input("\nPress enter to begin.")
 
@@ -42,6 +42,8 @@ if(theinput != ''):
 	gameid = theinput
 	print("Changed the game ID for "+gamename+" to "+gameid+"!")
 
+gameseries = input("Enter series for "+gameid+": (you may want to check other games in a metadata file to ensure the same series name is used)\n>").strip().lower()
+
 year=None
 while year == None:
 	try:
@@ -53,6 +55,7 @@ while year == None:
 #start off with the game info
 metaarr = ['  - id: '+gameid+'\n',
 '    title: "'+gamename+'"\n',
+'    series: '+gameseries+'\n',
 '    year: '+str(year)+'\n',
 '    platform: "'+system+'"\n',
 '    path: "'+system+'/'+gamename+'"\n',
@@ -94,20 +97,11 @@ for songtype in presenttypes:
 		theinput = input("Enter song ID for "+title+" (or press enter to default to "+songid+")\n>").strip()
 		if(theinput != ''):
 			songid = theinput
-			print("Changed the game ID for "+filename+" to "+songid+"!")
+			print("Changed the song ID for "+filename+" to "+songid+"!")
 		metaarr.append('      - id: '+songid+"\n")
 		metaarr.append('        title: "'+title+"\"\n")
 		metaarr.append('        path: "'+filename+"\"\n")
 		metaarr.append('        type: '+songtype+"\n")
-
-""" renames(old, new)
-        renames(old, new)
-        
-        Super-rename; create directories as necessary and delete any left
-        empty.  Works like rename, except creation of any intermediate
-        directories needed to make the new pathname good is attempted
-        first. """
-
 
 if input("Move music files to root directory?(y/n)\n>").startswith('y'):
 	for songtype in presenttypes:

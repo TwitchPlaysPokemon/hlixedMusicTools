@@ -7,7 +7,7 @@ Programs with italicized names have not been updated to deal with the new "serie
 ###analyzeFile.py
 Gives a summary of the number of songs of each type in a metadata file. Mostly for curiousity, and to give information about the size of various updates.
 
-###*createMetadata.py*
+###createMetadata.py
 A program to help Revo's music-pack-making process. Takes a specific folder configuration and generates a metadata file from it, with user-specified IDs.
 
 ###exportReadableMetadata.py
