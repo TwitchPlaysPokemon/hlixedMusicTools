@@ -34,7 +34,7 @@ Some .minigsf songs pulled from various sites are named "song 1", "song 2" and t
 ###splitFile.py
 When musicCat is done, use this. Takes a monolithic metadata file and autogenerates the per-folder metadata files for each game, creating and placing them in the appropriate folders.
 
-###*verifyAllSongs.py*
+###verifyAllSongs.py
 Very useful. Checker for metadata files to ensure that everything is valid. This ensures that no songs are missing a type, and that every song has a BRSTM file (but only if there's an other/ folder), among other things. If pyYaml is installed, it also runs the file through it and notes any errors. Outputs any errors to analysis.txt
 
 This folder also contains a few old metadata files for testing these programs on.

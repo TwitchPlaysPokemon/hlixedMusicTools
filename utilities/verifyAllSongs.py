@@ -38,7 +38,12 @@ game = ""
 hasSongs=False
 scannedThisGame = False
 
-
+gameTagList = [
+'title',
+'year',
+'platform',
+'path',
+'series']
 
 def printnlog(thing):
 	f = open("analysis.txt",'a')
@@ -60,11 +65,13 @@ while i < (len(arr)):
 			printnlog("A game ("+game+") doesn't have a 'songs:' tag! (line " +str(i)+")")
 			hasSongs=False
 		scannedThisGame = True
-	#check for wrong indentation
+	#check for games indented like a song or songs indented like a game
 	if "  - id: " in arr[i]:
 		isGame=True
+		#check the next 3 tags to see if the current entry is a game or a song
+		#We don't check all 5 tags of a game since that would throw an error when checking the last song in the file, which only has 4 lines after it
 		for j in range(3):
-			if not (arr[i+j+1].startswith("    platform: ") or arr[i+j+1].startswith("    year: ") or arr[i+j+1].startswith("    path: ") or arr[i+j+1].startswith("    title: ")):
+			if not (arr[i+j+1].split(':')[0].strip() in gameTagList):
 				isGame=False
 		if (not isGame) and (arr[i].startswith("  - id: ")):
 			printnlog(arr[i]+"has the wrong amount of spaces! (line "+str(i)+")")
@@ -92,9 +99,10 @@ while i < (len(arr)):
 	#surround titles and paths in quotes
 	if ("path:" in arr[i]) or ("title:" in arr[i]):
 		if '"' not in arr[i]:
-			printnlog("Put spaces around line "+str(i)+": "+arr[i])
-	#while we're at it ensure that you don't have only one quote
-	if arr[i].count('"')==1:
+			printnlog("Put quotes around line "+str(i)+": "+arr[i])
+	#while we're at it ensure that you don't have mismatched quotes
+	amtQuotes = arr[i].count('"') - arr[i].count('\\"')
+	if amtQuotes not in [0,2]:
 		printnlog(arr[i]+"has the wrong amount of quotes! (line "+str(i)+")")
 
 	
