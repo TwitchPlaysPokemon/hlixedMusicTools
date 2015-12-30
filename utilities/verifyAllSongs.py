@@ -1,4 +1,4 @@
-print("1hlixed's metadata file verifier v3.2")
+print("1hlixed's metadata file verifier v3.3")
 import re
 import os
 
@@ -99,7 +99,7 @@ try:
 				errorsExist=True
 
 			#If we have an other folder, ensure the BRSTM exists
-			if otherFolder and songpath and not os.path.isfile(gamepath+"/"+songpath):
+			if useOtherFolder and songpath and not os.path.isfile(gamepath+"/"+songpath):
 				printnlog("BRSTM not found! ["+game+"] "+gamepath+"/"+songpath)
 				errorsExist=True
 
