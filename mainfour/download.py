@@ -16,7 +16,7 @@ import os
 suggestionfilename = "suggestions.txt"
 
 print("To use this, copypaste everyone's submissions into a giant file named "+suggestionfilename+", making sure to give each brawlcustommusic URL a new line. This will auto-download the BRSTM and fill in the name from the BRSTM's page. Then, it will be placed in downloaded.txt, so you can use it with listenToSongs.py.")
-raw_input("\nPress enter to begin")
+input("\nPress enter to begin")
 
 print("Reading submissions from "+suggestionfilename)
 arr = []
@@ -37,13 +37,14 @@ try:
 except:
 	print("Creating downloaded.txt! This will contain some data about each track; run downloadedToMetadata.py to convert this into metadata formatted for TPP.")
 
-brawlcustommusicre = re.compile('http://(www.)*brawlcustommusic.(com|net)/\d+')
+smashcustommusicre = re.compile('http://(www.)*smashcustommusic.(com|net)/\d+')
 
 gameregex = re.compile('(?<=<span id="game"><a href="/game/).*?(?=</a><br>)')
+#<td><span id="name">Fighting of the Spirit (Arrange Version)</span>
+
 nameregex = re.compile('(?<=(<span id="name">)).*?(?=</span>)')
 
 typeregex = re.compile('\((battle|betting|warning|victory|30 seconds|results|result|break)\)',re.I)
-#<td><span id="name">Fighting of the Spirit (Arrange Version)</span>
 
 def updatefile():
 	f = open(suggestionfilename,'w')
@@ -60,8 +61,9 @@ print("All done; time to download some BRSTMs!")
 try:
 	counter=0
 	for i in range(len(arr)):
-		if (arr[i][0:3] == "[ ]") and (re.search(brawlcustommusicre,arr[i])):
-			url = re.search(brawlcustommusicre,arr[i]).group()
+		arr[i] = arr[i].replace("brawlcustommusic","smashcustommusic") #you never know
+		if (arr[i][0:3] == "[ ]") and (re.search(smashcustommusicre,arr[i])):
+			url = re.search(smashcustommusicre,arr[i]).group()
 			
 			number = url.split("/")[-1]
 			response = urllib.request.urlopen(url)
@@ -95,7 +97,7 @@ try:
 			if(counter%10==0):
 				counter=0
 				updatefile()
-	print("Done! You might want to run removeDuplicaesListening.py to remove any duplicate songs, though.")
+	print("Done! You might want to run removeDuplicatesListening.py to remove any duplicate songs, though.")
 finally:
 	print("Quitting...")
 	updatefile()
