@@ -8,10 +8,10 @@ This program only works in Python 3 because 1hlixed hasn't gotten around to port
 
 
 print("1hlixed's automatic BRSTM downloader v1.1")
-#Todo: make 2.7 version
 import urllib.request
 import re
 import os
+import shutil
 
 suggestionfilename = "suggestions.txt"
 
@@ -57,6 +57,25 @@ def updatefile():
 	print("downloaded.txt updated!")
 
 
+headers = {"User-Agent":"Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}
+
+def getPage(url):
+	#open URL, with user agent headers
+	request = urllib.request.Request(url, headers=headers)
+	response = urllib.request.urlopen(request)
+
+	return str(response.read())
+
+def downloadPage(url, filename):
+	#download a page, with user agent headers
+	if not os.path.exists("Other/"+game):
+		os.makedirs("Other/"+game)
+
+	request = urllib.request.Request(url, headers=headers)
+	response = urllib.request.urlopen(request)
+	with open(filename, 'wb') as out_file:
+		shutil.copyfileobj(response, out_file)
+
 print("All done; time to download some BRSTMs!")
 try:
 	counter=0
@@ -64,10 +83,10 @@ try:
 		arr[i] = arr[i].replace("brawlcustommusic","smashcustommusic") #you never know
 		if (arr[i][0:3] == "[ ]") and (re.search(smashcustommusicre,arr[i])):
 			url = re.search(smashcustommusicre,arr[i]).group()
-			
 			number = url.split("/")[-1]
-			response = urllib.request.urlopen(url)
-			html = str(response.read())
+			songtype = re.search(typeregex,arr[i])
+
+			html = getPage(url)
 			try:
 				game = re.search(gameregex, html).group().split(">")[1]
 				songname = re.search(nameregex, html).group().replace("\\'","\'")
@@ -77,11 +96,11 @@ try:
 				continue
 
 			print("Downloading "+songname +" from "+game+"...")
-			if not os.path.exists("Other/"+game):
-			    os.makedirs("Other/"+game)
-			urllib.request.urlretrieve ("http://www.brawlcustommusic.com/brstm/"+number, "Other/"+game+"/"+songname.replace("/","")+".brstm")
+
+			downloadPage("http://www.brawlcustommusic.com/brstm/"+number, "Other/"+game+"/"+songname.replace("/","")+".brstm")
+
 			print("downloaded "+"Other/"+game+"/"+songname.replace("/","")+".brstm")
-			songtype = re.search(typeregex,arr[i])
+
 			if songtype:
 				if (songtype == "results") or (songtype == "victory"):
 					songtype = "result"
