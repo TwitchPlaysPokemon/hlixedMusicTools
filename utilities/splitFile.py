@@ -24,7 +24,7 @@ for i in range(len(arr)):
 		arr[i] += "\n"
 	arr[i] = arr[i][4:]
 
-headerArr = ["...\n"]
+headerArr = ["---\n"]
 
 versionNum = input("Add a version number? If so, enter it, otherwise just press enter without typing anything:\n>").replace(" ","").replace("\n","").strip()
 
