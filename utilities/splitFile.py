@@ -22,7 +22,8 @@ print("Successfully read the file!")
 for i in range(len(arr)):
 	if(arr[i][-1] != "\n"):
 		arr[i] += "\n"
-	arr[i] = arr[i][4:]
+	if not (0 <= arr[i].find('#') <= 8):
+		arr[i] = arr[i][4:]
 
 headerArr = ["---\n"]
 
@@ -49,7 +50,7 @@ while i < (len(arr)):
 			i += 1
 			continue
 		print(gamepath)
-		toBeWritten = arr[lastIndex+1:i]
+		toBeWritten = arr[lastIndex:i]
 		#print(arr[lastIndex+1:i])
 		try:
 			os.makedirs(gamepath)
