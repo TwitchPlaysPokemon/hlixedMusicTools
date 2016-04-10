@@ -42,7 +42,7 @@ while i < (len(arr)):
 		lastIndex=i
 	if arr[i].startswith("path: "): #game path
 		print("found path")
-		gamepath = arr[i].replace("path: ","").replace("\n","")
+		gamepath = arr[i].replace("path: ","").replace("\n","").replace(":","_")
 		if gamepath[0] == '"':
 			gamepath = gamepath[1:-1]
 	if arr[i].startswith("id: "): #new game
