@@ -1,8 +1,13 @@
 This repo contains a collection of music tools to speed up and help with managing TPP metadata. 
 
-# Utilities
+###downloadfromxlsx.py
 
-Programs with italicized names have not been updated to deal with the new "series: " tag and may malfunction or break. Try not to use them.
+Downloads brstms from smashcustommusic links in a certain range in the music doc. Quite helpful!
+
+# Note: Any program in the non-split folder has not been updated to deal with the new per-game file format. They might still be useful in particular cases, though.
+Also, programs with italicized names have not been updated to deal with the "series: " tag either, and may malfunction or break. Try not to use them.
+
+# non-split/Utilities
 
 ###analyzeFile.py
 Gives a summary of the number of songs of each type in a metadata file. Mostly for curiousity, and to give information about the size of various updates.
@@ -49,7 +54,7 @@ Reads from the listeningdownloaded.txt file created by listenToSongs.py and make
 ###removeDuplicatesListening.py
 Removes duplicate submissions in listeningdownloaded.txt, in case two different people both submitted the same brawlcustommusic URL. Does not scan through a metadata file, though.
 
-## Utilities/old
+## non-split/Utilities/old
 
 Old utilities that are not supported but are here because why not.
 
