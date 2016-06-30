@@ -15,7 +15,7 @@ import shutil
 try:
 	from openpyxl import load_workbook
 except ImportError:
-	print("openpyxl is needed to use this program! Install it with 'pip3 install openpyxl'.")
+	input("openpyxl is needed to use this program! Install it with 'pip3 install openpyxl'.\nPress enter to exit.")
 	exit();
 
 docfilename = "TPP Music .xlsx"
@@ -161,3 +161,4 @@ try:
 finally:
 	print("Quitting...")
 	updatefile()
+	input("\n\nPress enter to exit.")
