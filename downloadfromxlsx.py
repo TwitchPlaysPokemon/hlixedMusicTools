@@ -6,7 +6,7 @@ This program only works in Python 3.""")
     exit()
 
 
-print("1hlixed's automatic BRSTM downloader v3")
+print("1hlixed's automatic BRSTM downloader v3.1")
 import urllib.request
 import re
 import os
@@ -69,13 +69,23 @@ headers = {"User-Agent":"Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox
 
 def getPage(url):
 	#open URL, with user agent headers
+
+	#urllib requires an HTTP:// prefix
+	if 'http' not in url:
+		url = "http://" + url
+
 	request = urllib.request.Request(url, headers=headers)
 	response = urllib.request.urlopen(request)
 
 	return str(response.read())
 
 def downloadPage(url, filename):
-	#download a page, with user agent headers
+	#download a page (or more accurately, a file) with appropriate user agent headers
+
+	#urllib requires an HTTP:// prefix
+	if 'http' not in url:
+		url = "http://" + url
+
 	foldername = os.path.dirname(filename)
 	if not os.path.exists(foldername):
 		os.makedirs(foldername)
