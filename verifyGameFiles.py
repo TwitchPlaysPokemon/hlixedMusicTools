@@ -2,7 +2,7 @@
 metadata_library_path = "" 
 musicfiles_library_path = ""
 
-print("1hlixed's metadata file verifier v4")
+print("1hlixed's metadata file verifier v4.1")
 
 #standard modules
 import re
@@ -82,9 +82,9 @@ def import_metadata(metafilename):
 		newsong = Song(**song)
 
 		#First, test 
-		if newsong.id in songs:
+		if newsong.id in songlist:
 			log.error("Songid conflict! %s exists twice, once in %s and once in %s!",
-						  newsong.id, songs[newsong.id].game.id, game.id)
+						  newsong.id, songlist[newsong.id].game.title, game.title)
 		if newsong.id in newsongs:
 			log.error("Songid conflict! %s exists twice in the same game, %s.",
 						  newsong.id, game.id)
