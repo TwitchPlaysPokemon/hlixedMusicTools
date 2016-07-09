@@ -125,7 +125,7 @@ try:
 			
 			#only accept songs that have team decisions of accept or change
 			teamdecision = doclines[i][4].strip().lower()
-			if not (('accept' in teamdecision) or ('change:' in teamdecision)):
+			if not (('accept' in teamdecision) or ('change' in teamdecision)):
 				print("Line "+str(i+1)+" had a team decision of '"+teamdecision+"', skipping...")
 				statusArr[i-dlrange.start+1] = statusArr[i-dlrange.start+1].replace("[ ]","[r]")
 				continue
