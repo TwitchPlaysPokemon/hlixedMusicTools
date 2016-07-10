@@ -1,4 +1,4 @@
-#Old program to autogenerate list of added songs from a control+A on the github website for a commit
+#Dirty program to autogenerate list of added songs from a control+A on the github website for a commit
 #To use, first select the changelog page, and save it into a file named changelog.txt. Then run this! It'll output to newsongs.txt, and all that's left to do is add a line at the top saying "Songs added on <date>".
 
 import collections
