@@ -1,4 +1,5 @@
 #Old program to autogenerate list of added songs from a control+A on the github website for a commit
+#To use, first select the changelog page, and save it into a file named changelog.txt. Then run this! It'll output to newsongs.txt, and all that's left to do is add a line at the top saying "Songs added on <date>".
 
 import collections
 with open("changelog.txt") as f:
@@ -26,10 +27,20 @@ for line in lines:
 		if "+    title: " in line:
 			songname = line.replace("+    title: ","").strip()[1:-1]
 
+#print the results, while also outputting to a file
+outputFilename = "newsongs.txt"
+toPrint = []
 
-print(added)
+def printnlog(string):
+	print(string)
+	toPrint.append(string + '\n')
 
 for category in added:
-	print("\n==For "+category+":")
+	printnlog("\n==For "+category+":")
 	for song in added[category]:
-		print(song)
+		printnlog(song)
+
+#output to a file as well as printing
+with open(outputFilename, 'w') as f:
+	f.writelines(toPrint)
+input("\n\nThe above has also been outputted to "+outputFilename+" for easy copypasting! \nPress enter to exit.")
