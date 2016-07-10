@@ -1,13 +1,12 @@
 #Old program to autogenerate list of added songs from a control+A on the github website for a commit
 
-
-
+import collections
 with open("changelog.txt") as f:
 	lines = f.readlines()
 
 print(lines[0])
 
-added = {}
+added = collections.OrderedDict()
 
 gamename = ""
 songname = ""
