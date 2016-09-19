@@ -14,8 +14,9 @@ import shutil
 
 try:
 	from openpyxl import load_workbook
+	from unidecode import unidecode
 except ImportError:
-	input("openpyxl is needed to use this program! Install it with 'pip3 install openpyxl'.\nPress enter to exit.")
+	input("openpyxl and unidecode are needed to use this program! Install them with 'pip3 install openpyxl unidecode'.\nPress enter to exit.")
 	exit();
 
 docfilename = "TPP Music .xlsx"
@@ -77,7 +78,7 @@ def getPage(url):
 	request = urllib.request.Request(url, headers=headers)
 	response = urllib.request.urlopen(request)
 
-	return str(response.read())
+	return response.read().decode("utf-8")
 
 def downloadPage(url, filename):
 	#download a page (or more accurately, a file) with appropriate user agent headers
@@ -143,22 +144,14 @@ try:
 				#format to folder title standards
 				gametitle = gametitle.replace(":","_").replace("\\'","'")
 
+				#decode unicode (also handles accented es)
+				gametitle = unidecode(gametitle)
+				songname = unidecode(songname)
+
 				#these characters aren't allowed in windows foldernames
-				for badchar in ["*","?","<",">","|"]:
+				for badchar in ["*","?","<",">","|",'\\','/','.']:
 					gametitle = gametitle.replace(badchar,"")
 					songname = songname.replace(badchar,"")
-
-				#don't mess up with unicode accented e; use a normal e for a filename
-				gametitle = gametitle.replace("\xc3\xa9","e")
-				songname = songname.replace("\xc3\xa9","e")
-
-				#Finally, verify the names have no unicode characters
-				#Urllib is horrible with unicode. A normal &#350; in HTML is read as a series of \xBB strings, which don't even spell out the right characters
-				#However, it actually reads the unicode character as "\\xBB". That's not one character - that's a backslash, then an x, then two bytes - and it's valid ASCII so I can't test for it.
-				#To detect unicode, we must search for \\x because urllib is horrible.
-				if ('\\x' in gametitle) or ('\\x' in songname):
-					print("===Error=== Unicode characters detected:" + gametitle + " - " + songname + ". Please download the song from line "+str(i+1)+" manually and rename it so that there are no unicode characters anywhere in the path.")
-					continue
 
 			except Exception as e:
 				print("===Error=== Unable to scrape from smashcustommusic for line "+str(i+1) + ": " + str(e))
