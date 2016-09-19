@@ -36,22 +36,22 @@ except FileNotFoundError as e:
 #load downloaded.txt, which lets the state persist over multiple sessions
 statusArr = []
 try:
-	with open('downloaded.txt') as f:
+	with open("downloaded.txt", "r", encoding="utf-8") as f:
 		statusArr = f.readlines()
 		#grab range
-		dlrange = [int(x) for x in statusArr[0].split("-")]
-		dlrange = range(dlrange[0],dlrange[1])
+		inputtedrange = [int(x) for x in statusArr[0].split("-")]
+		dlrange = range(inputtedrange[0],inputtedrange[1])
 
 except FileNotFoundError as e:
 	linestodl = input("Enter line range to download (such as '200-300' or '1950-2300')\n:")
-	dlrange = [int(x) for x in linestodl.split("-")]
-	dlrange = range(dlrange[0],dlrange[1])
+	inputtedrange = [int(x) for x in linestodl.split("-")]
+	dlrange = range(inputtedrange[0],inputtedrange[1])
 	statusArr = [linestodl + '\n'] + ["[ ]"+str(doclines[i][0])+'\n' for i in dlrange]
 
 #sanity tests
-assert dlrange[0] > 2
-assert dlrange[1] < len(doclines)
-assert dlrange[1] > dlrange[0]
+assert dlrange.start > 2
+assert dlrange.stop < len(doclines)
+assert dlrange.stop > dlrange.start
 
 gameregex = re.compile('(?<=<span id="game"><a href="/game/).*?(?=</a><br>)')
 #<td><span id="name">Fighting of the Spirit (Arrange Version)</span>
@@ -59,7 +59,7 @@ gameregex = re.compile('(?<=<span id="game"><a href="/game/).*?(?=</a><br>)')
 nameregex = re.compile('(?<=(<span id="name">)).*?(?=</span>)')
 
 def updatefile():
-	f2 = open('downloaded.txt','w')
+	f2 = open('downloaded.txt', 'w', encoding="utf-8")
 	f2.writelines(statusArr)
 	f2.close()
 	print("downloaded.txt updated!")
@@ -152,13 +152,25 @@ try:
 				gametitle = gametitle.replace("\xc3\xa9","e")
 				songname = songname.replace("\xc3\xa9","e")
 
-			except:
-				print("===Error=== Unable to scrape game name from smashcustommusic for line "+str(i+1))
+				#Finally, verify the names have no unicode characters
+				#Urllib is horrible with unicode. A normal &#350; in HTML is read as a series of \xBB strings, which don't even spell out the right characters
+				#However, it actually reads the unicode character as "\\xBB". That's not one character - that's a backslash, then an x, then two bytes - and it's valid ASCII so I can't test for it.
+				#To detect unicode, we must search for \\x because urllib is horrible.
+				if ('\\x' in gametitle) or ('\\x' in songname):
+					print("===Error=== Unicode characters detected:" + gametitle + " - " + songname + ". Please download the song from line "+str(i+1)+" manually and rename it so that there are no unicode characters anywhere in the path.")
+					continue
+
+			except Exception as e:
+				print("===Error=== Unable to scrape from smashcustommusic for line "+str(i+1) + ": " + str(e))
 				continue
 
 			#Download the song!
 			print("Downloading "+songname +" from "+gametitle+"...",end="")
-			downloadPage("http://www.smashcustommusic.com/brstm/"+scmnumber, "downloadedsongs/"+gametitle+"/"+songname+".brstm")
+			try:
+				downloadPage("http://www.smashcustommusic.com/brstm/"+scmnumber, "downloadedsongs/"+gametitle+"/"+songname+".brstm")
+			except Exception as e:
+				print("===ERROR=== %s" % (e, ))
+				continue
 			print("Done!")
 
 			#Mark the song as downloaded and save the progress file periodically
