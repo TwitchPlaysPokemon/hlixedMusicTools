@@ -2,7 +2,7 @@
 metadata_library_path = "" 
 musicfiles_library_path = ""
 
-print("1hlixed's metadata file verifier v4.1")
+print("1hlixed's metadata file verifier v4.2")
 
 #standard modules
 import re
@@ -26,13 +26,13 @@ if metadata_library_path == "" or musicfiles_library_path == "":
 
 
 Song = namedtuple("Song", ("id", "title", "path", "types", "game", "fullpath", "ends"))
-Game = namedtuple("Game", ("id", "title", "platform", "year", "series"))
+Game = namedtuple("Game", ("id", "title", "platform", "year", "series","is_fanwork"))
 
 
 #Tests:
-#	song missing a tag in [type, title, path, category]
-#	game missing a tag in gametaglist
-#	song type in validsongtypes
+#	song missing a required tag
+#	game missing a required tag
+#	song type in valid_song_types
 #	duplicate game ID
 #	duplicate song id
 #	song ids are lowercase
@@ -44,7 +44,7 @@ Game = namedtuple("Game", ("id", "title", "platform", "year", "series"))
 log = logging.getLogger("verifier")
 
 songlist = {}
-validSongtypes = ['betting', 'battle', 'result', 'warning', 'break']
+valid_song_types = ['betting', 'battle', 'result', 'warning', 'break']
 
 def import_metadata(metafilename):
 	"""Import metadata given a metadata filename. Assumed to be one game per metadata file."""
@@ -57,11 +57,22 @@ def import_metadata(metafilename):
 	newsongs = {}
 
 	songs = gamedata.pop("songs")
+
+	#the series and is_fanwork tags are optional
 	if 'series' not in gamedata:
 		gamedata['series'] = None
+	if 'is_fanwork' not in gamedata:
+		gamedata['is_fanwork'] = None
 
+	#Create the game info, which will cause an error if not all required tags are present
 	game = Game(**gamedata)
 
+	#before proceeding, test to ensure that is_fanwork is a boolean
+	if game.is_fanwork is not None:
+		if type(game.is_fanwork) != bool:
+			log.error("Gameid {} has an 'is_fanwork' tag that is {} instead of a boolean value (true/false).",
+						  game.id, game.is_fanwork)
+	#now, test each song in the game
 	for song in songs:
 		song["fullpath"] = os.path.join(path, song["path"])
 		song["game"] = game
@@ -81,25 +92,31 @@ def import_metadata(metafilename):
 		#Any missing tags will cause an error here
 		newsong = Song(**song)
 
-		#First, test 
+		#Now, test for duplicates
+		#is the current song ID present in a different game?
 		if newsong.id in songlist:
 			log.error("Songid conflict! %s exists twice, once in %s and once in %s!",
 						  newsong.id, songlist[newsong.id].game.title, game.title)
+		#is the current song ID present twice in THIS game?
 		if newsong.id in newsongs:
 			log.error("Songid conflict! %s exists twice in the same game, %s.",
 						  newsong.id, game.id)
 
+		#Ensure the song has a BRSTM file
 		actual_songfile_path = newsong.fullpath.replace(metadata_library_path, musicfiles_library_path)
 		if not os.path.isfile(actual_songfile_path):
 			log.error("Songid %s doesn't have a BRSTM file at %s!",
 					   newsong.id, actual_songfile_path)
+
+		#if an ends tag is present but it's a small number, complain since the user probably entered in minutes and not seconds
 		if newsong.ends != None:
 			for endtime in newsong.ends:
 				if endtime < 10:
 					log.warn("Songid {} has an end of {}, which seems fishy (end times are in seconds, not minutes; Did you mean to put {}?)".format(newsong.id, endtime, int(endtime*60)))
 
+		#ensure the song is a valid type
 		for thetype in newsong.types:
-			if thetype not in validSongtypes:
+			if thetype not in valid_song_types:
 				log.error("Songid %s has an invalid type %s!",
 					   newsong.id, thetype)
 
