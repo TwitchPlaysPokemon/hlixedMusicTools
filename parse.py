@@ -13,20 +13,28 @@ gamename = ""
 songname = ""
 songtype = "betting"
 
-for line in lines:
+i=0
+while i < len(lines):
+	line = lines[i]
 	if "/metadata.yaml" in line:
 		gamename = " ".join(line.split("/metadata.yaml")[0].split(" ")[1:])
 		gamename = gamename.replace("_",":")
-	if line[0] == "+":
+	if line.startswith("+  - id:"):
+		#collect song title and type from the next 4 lines
+		for j in range(1,4):
+			songline = lines[i+j]
+			if songline.startswith("+  - id:"):
+				print("The song on line "+str(i)+" seems to be missing a tag? Aborting...")
+				exit()
+			if songline.startswith("+    type: "):
+				songtype = songline.replace("+    type: ","").strip()
+			if songline.startswith("+    title: "):
+				songname = songline.replace("+    title: ","").strip()[1:-1]
 
-		if "+    type: " in line:
-			songtype = line.replace("+    type: ","").strip()
-			if songtype not in added:
-				added[songtype] = []
-			added[songtype].append(songname + " from " + gamename)
-		if "+    title: " in line:
-			songname = line.replace("+    title: ","").strip()[1:-1]
-
+		if songtype not in added:
+			added[songtype] = []
+		added[songtype].append(songname + " from " + gamename)
+	i += 1
 #print the results, while also outputting to a file
 outputFilename = "newsongs.txt"
 toPrint = []
