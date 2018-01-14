@@ -25,7 +25,7 @@ if metadata_library_path == "" or musicfiles_library_path == "":
 	exit()
 
 
-Song = namedtuple("Song", ("id", "title", "path", "types", "game", "fullpath", "ends"))
+Song = namedtuple("Song", ("id", "title", "path", "types", "game", "fullpath", "ends", "tags"))
 Game = namedtuple("Game", ("id", "title", "platform", "year", "series","is_fanwork"))
 
 
@@ -84,6 +84,8 @@ def import_metadata(metafilename):
 		#if no ends provided, say so explicitly
 		if "ends" not in song:
 			song["ends"] = None
+		if "tags" not in song:
+			song["tags"] = None
 		#convert single end time to list
 		elif (type(song["ends"]) == int) or (type(song["ends"]) == float):
 			song["ends"] = [song["ends"]]
