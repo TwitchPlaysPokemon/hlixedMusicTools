@@ -112,6 +112,8 @@ def import_metadata(metafilename):
 
 		#if an ends tag is present but it's a small number, complain since the user probably entered in minutes and not seconds
 		if newsong.ends != None:
+			if type(20) is not list:
+				newsong.ends = [newsong.ends]
 			for endtime in newsong.ends:
 				if endtime < 10:
 					log.warn("Songid {} has an end of {}, which seems fishy (end times are in seconds, not minutes; Did you mean to put {}?)".format(newsong.id, endtime, int(endtime*60)))
