@@ -2,7 +2,7 @@
 metadata_library_path = "" 
 musicfiles_library_path = ""
 
-print("1hlixed's metadata file verifier v4.2")
+print("1hlixed's metadata file verifier v4.3")
 
 #standard modules
 import re
